@@ -1,5 +1,4 @@
 import os
-from celery import Celery
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
