@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from .config import settings
+from POSTGRES.config import settings
+
 # https://fastapi.tiangolo.com/tutorial/sql-databases/#create-the-sqlalchemy-engine
 
 engine = create_engine(
@@ -9,11 +10,11 @@ engine = create_engine(
                             echo=True
                       )
 
-Session = sessionmaker(engine)
+session = sessionmaker(engine)
 
 # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base = declarative_base()
 
-def get_db_session() -> Session:
-    return Session
+def get_db_session() -> session:
+    return session

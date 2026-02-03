@@ -1,1 +1,2 @@
-from .connections import *
+from POSTGRES.repository.connections import *
+

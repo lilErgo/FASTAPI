@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from models.crypto_table import crypto_info
-from ...POSTGRES import get_db_session
+from POSTGRES.models.crypto_table import crypto_info
+from POSTGRES.database import get_db_session
 
 
 class TaskRepo:
