@@ -1,0 +1,1 @@
+from POSTGRES.migrations import *
