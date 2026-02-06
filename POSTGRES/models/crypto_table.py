@@ -1,4 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, declared_attr
+from sqlalchemy import Integer
 from typing import Optional
 
 class Base(DeclarativeBase):
@@ -12,10 +13,11 @@ class Base(DeclarativeBase):
         return cls.__name__.lower()
 
 class crypto_info(Base):
-    # __tablename__ будет "cryptoinfo" из Base.__tablename__
-    # но у вас есть явное объявление ниже, которое переопределит
+    # Добавляем новый автоинкрементный первичный ключ
+    record_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     
-    id: Mapped[int] = mapped_column(primary_key=True)
+    # Теперь id может дублироваться
+    id: Mapped[int] = mapped_column(Integer, index=True)
     price: Mapped[int]
     time: Mapped[str]
 
