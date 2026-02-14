@@ -25,6 +25,7 @@ class Task_FA(BaseModel):
     class Config:
         from_attributes = True  # Добавьте это!
 
+
     @model_validator(mode='after')
     def check_for_nones(self):
         if self.id is None or self.price is None or self.time is None :

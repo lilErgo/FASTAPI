@@ -3,10 +3,7 @@ from sqlalchemy import Integer
 from typing import Optional
 
 class Base(DeclarativeBase):
-    # УБРАТЬ это: id: Any
-    # УБРАТЬ это: __name__: str (это не нужно)
-    
-    __allow_unmapped__ = False  # лучше False если не уверены
+    # __allow_unmapped__ = False  # лучше False если не уверены
 
     @declared_attr
     def __tablename__(cls):
@@ -24,7 +21,6 @@ class crypto_info(Base):
 class crypto_tag(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
-
 
 
 

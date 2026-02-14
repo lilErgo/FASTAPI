@@ -1,4 +1,4 @@
-from sqlalchemy import select,delete
+from sqlalchemy import select,delete, update
 from sqlalchemy.orm import Session
 
 from POSTGRES.models.crypto_table import crypto_info,crypto_tag
@@ -9,26 +9,49 @@ class TaskRepo:
     def __init__(self, db_session: Session) -> None:
         self.db_session = db_session
 
-    def get_tiker(self):
+    def get_tiker(self) -> list[Task_FA]:
         with self.db_session() as session:
-            task:list[crypto_info] = session.execute(select(crypto_info)).scalars().all()
-            return task
+            task:crypto_info = session.execute(select(crypto_info)).scalars().all()
+            return list(task)
         
-    def get_tiker_id(self,id: int) -> list[crypto_info]| None:
+        
+    # def get_tiker_by_id(self, id: int) -> list[crypto_info]:
+    #     with self.db_session() as session:
+    #         tasks = session.execute(
+    #             select(crypto_info).where(crypto_info.id == id)
+    #         ).scalars().all()
+    #         return tasks  # Always
+    
+    def get_tiker_by_rec_id(self, uid: int) -> list[Task_FA]:
         with self.db_session() as session:
-            task:list[crypto_info] = session.execute(select(crypto_info).where(crypto_info.id == id)).scalars()
-            return task
+            tasks: crypto_info = session.execute(select(crypto_info).where(crypto_info.record_id == uid)).scalars().all()
+            # print(tasks.id)
+            return list(tasks)
         
-    def create_task(self, tasks: Task_FA):#, task: crypto_info
+    def create_task(self, tasks: Task_FA) -> int:#, task: crypto_info
         task = crypto_info(id = tasks.id, price = tasks.price, time = tasks.time )
         with self.db_session() as session:
             session.add(task)
             session.commit()
-            
-    def delete_task(self,id: int):
+            return task.record_id
+        
+    def update_task(self, record_i, pric) :
+        querry = update(crypto_info).where(crypto_info.record_id == record_i).values(price=pric).returning(crypto_info.record_id)
         with self.db_session() as session:
-            session.execute(delete(crypto_info).where(crypto_info.record_id == id))
+            rec_id = session.execute(querry).scalar_one_or_none()
             session.commit()
+            
+            return self.get_tiker_by_rec_id(uid=rec_id)
+
+
+            
+    def delete_task_by_id(self,reg_id: int) -> list[Task_FA]:
+        with self.db_session() as session:
+            result:crypto_info = session.execute(delete(crypto_info).where(crypto_info.record_id == reg_id))
+            session.commit()
+            print(result)
+            return result
+
 
     def get_crypto_by_name(self, name):
         query = select(crypto_info).join(crypto_tag,crypto_info.id == crypto_tag.id).where(crypto_tag.name == name)
